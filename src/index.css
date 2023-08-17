@@ -1,0 +1,9 @@
+:root {
+  font-family: monospace, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  background-color: rgba(244, 244, 244, 0.719);
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}

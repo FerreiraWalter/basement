@@ -1,0 +1,64 @@
+.home-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 3px solid;
+  border-top: 3px solid;
+}
+
+.home-container img {
+  width: 4rem;
+}
+
+.home-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-content h1 {
+  font-size: 6rem;
+  padding-top: 5rem;
+  text-decoration: underline;
+}
+
+.home-content p {
+  font-size: 1.8rem;
+  padding-bottom: 5rem;
+}
+
+.resume-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.resume-content {
+  max-width: 530px;
+  min-height: 65px;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.resume-content h1 {
+  font-size: 2rem;
+  text-decoration: underline;
+  padding-bottom: 0.8rem;
+}
+
+.resume-content button {
+  padding: 0.5rem;
+  border: 2px solid;
+  margin-top: 0.8rem;
+  border-radius: 8px;
+  font-size: 1.2rem;
+}
+
+.resume-content button:hover {
+  color: white;
+  background-color: black;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
