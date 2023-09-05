@@ -25,7 +25,8 @@ dependencies {
     implementation("com.datastax.oss:java-driver-core:4.11.1")
 
     implementation("org.slf4j:slf4j-api:1.7.32")
-    implementation("org.slf4j:slf4j-simple:1.7.32")
+    //implementation("org.slf4j:slf4j-simple:1.7.32")
+    implementation("ch.qos.logback:logback-classic:1.2.6")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

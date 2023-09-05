@@ -24,9 +24,11 @@ public class App {
 
         CassandraConnector client = new CassandraConnector();
         client.connect();
+        client.createKeyspace("my_keyspace", "SimpleStrategy", 1);
+        client.createTable("posts");
+
         CqlSession session = client.getSession();
         System.out.println("session " + session);
-        client.close();
     }
 
     static class CreatePostSummary implements HttpHandler {
