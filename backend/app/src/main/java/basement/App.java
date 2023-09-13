@@ -26,6 +26,7 @@ public class App {
         client.createTable("posts");
 
         server.createContext("/post", new CreatePostSummary(client));
+        server.createContext("/healthz", new HealthCheckHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Server started on port: " + apiPort);
@@ -74,6 +75,19 @@ public class App {
         public void handle(HttpExchange exchange) throws IOException {
             if ("GET".equals(exchange.getRequestMethod())) {
                 exchange.sendResponseHeaders(200, 0);
+            } else {
+                exchange.sendResponseHeaders(405, 0);
+            }
+        }
+    }
+
+    static class HealthCheckHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if ("GET".equals(exchange.getRequestMethod())) {
+                String response = "Health check OK";
+                exchange.sendResponseHeaders(200, response.length());
+                exchange.getResponseBody().write(response.getBytes());
             } else {
                 exchange.sendResponseHeaders(405, 0);
             }
