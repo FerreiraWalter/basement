@@ -1,7 +1,9 @@
 package basement;
 
 import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.BoundStatement;
 import com.datastax.oss.driver.api.core.cql.PreparedStatement;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
 
 import java.util.UUID;
 
@@ -54,4 +56,35 @@ public class CassandraConnector {
         session.execute(preparedStatement.bind(uuid, title, summary));
     }
 
+    public Post getPostById(UUID postId) {
+        String query = "SELECT * FROM my_keyspace.posts WHERE post_id = ?";
+
+        PreparedStatement preparedStatement = session.prepare(query);
+
+        BoundStatement boundStatement = preparedStatement.bind(postId);
+
+        ResultSet resultSet = session.execute(boundStatement);
+
+        return (Post) resultSet.one();
+    }
+
+    public void deletePostById(UUID postId) {
+        String query = "DELETE FROM my_keyspace.posts WHERE post_id = ?";
+
+        PreparedStatement preparedStatement = session.prepare(query);
+
+        BoundStatement boundStatement = preparedStatement.bind(postId);
+
+        session.execute(boundStatement);
+    }
+
+    public void updatePostById(UUID postId, String newTitle, String newSummary) {
+        String query = "UPDATE my_keyspace.posts SET title = ?, summary = ? WHERE post_id = ?";
+
+        PreparedStatement preparedStatement = session.prepare(query);
+
+        BoundStatement boundStatement = preparedStatement.bind(newTitle, newSummary, postId);
+
+        session.execute(boundStatement);
+    }
 }
