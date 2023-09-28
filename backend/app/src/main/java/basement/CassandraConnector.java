@@ -47,13 +47,13 @@ public class CassandraConnector {
         session.execute(query);
     }
 
-    public void insertPost(String title, String summary) {
+    public void insertPost(String title, String summary, String body) {
         UUID uuid = UUID.randomUUID();
-        String query = "INSERT INTO my_keyspace.posts (post_id, title, summary) VALUES (?, ?, ?)";
+        String query = "INSERT INTO my_keyspace.posts (post_id, title, summary, body) VALUES (?, ?, ?, ?)";
 
         PreparedStatement preparedStatement = session.prepare(query);
 
-        session.execute(preparedStatement.bind(uuid, title, summary));
+        session.execute(preparedStatement.bind(uuid, title, summary, body));
     }
 
     public Post getPostById(UUID postId) {
