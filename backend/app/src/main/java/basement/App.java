@@ -15,8 +15,8 @@ import java.util.Properties;
 public class App {
 
     public static void main(String[] args) throws IOException {
-        Properties properties = loadConfigProperties();
-        String apiPortStr = properties.getProperty("API_PORT");
+        String apiPortStr = System.getenv("PORT");
+        System.out.println(apiPortStr);
         int apiPort = Integer.parseInt(apiPortStr);
         HttpServer server = HttpServer.create(new InetSocketAddress(apiPort), 0);
 
@@ -29,7 +29,7 @@ public class App {
         server.createContext("/healthz", new HealthCheckHandler());
         server.setExecutor(null);
         server.start();
-        System.out.println("Server started on port: " + apiPort);
+        System.out.println("Server started on port: " + 8080);
 
         CqlSession session = client.getSession();
         System.out.println("session " + session);
@@ -45,27 +45,33 @@ public class App {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            if ("POST".equals(exchange.getRequestMethod())) {
-                String requestBody = new String(exchange.getRequestBody().readAllBytes());
-                String response = "Post created: " + requestBody;
+            if (!"POST".equals(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(405, 0);
+                return;
+            }
 
-                JSONObject jsonObject = null;
-                try {
-                    jsonObject = new JSONObject(requestBody);
+            String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-                    String title = jsonObject.getString("title");
-                    String summary = jsonObject.getString("summary");
+            String response = "Post created: " + requestBody;
 
-                    client.insertPost(title, summary);
-                    exchange.sendResponseHeaders(201, response.length());
-                    exchange.getResponseBody().write(response.getBytes());
-                } catch (JSONException e) {
-                    exchange.sendResponseHeaders(500, response.length());
-                    throw new RuntimeException(e);
+            try {
+                JSONObject jsonObject = new JSONObject(requestBody);
+
+                String title = jsonObject.getString("title");
+                String summary = jsonObject.getString("summary");
+                String body  = jsonObject.getString("body");
+
+                if (title == null || summary == null || body == null) {
+                    exchange.sendResponseHeaders(422, 0);
+                    return;
                 }
 
-            } else {
-                exchange.sendResponseHeaders(405, 0);
+                client.insertPost(title, summary, body);
+                exchange.sendResponseHeaders(201, response.length());
+                exchange.getResponseBody().write(response.getBytes());
+            } catch (JSONException e) {
+                exchange.sendResponseHeaders(500, response.length());
+                throw new RuntimeException(e);
             }
         }
     }
@@ -92,17 +98,5 @@ public class App {
                 exchange.sendResponseHeaders(405, 0);
             }
         }
-    }
-
-    public static Properties loadConfigProperties() {
-        Properties properties = new Properties();
-        String path = "/home/ubots/ubots/mentoria/backend/app/src/main/resources/config.properties";
-        try (FileInputStream fileInputStream = new FileInputStream(path)) {
-            properties.load(fileInputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return properties;
     }
 }
