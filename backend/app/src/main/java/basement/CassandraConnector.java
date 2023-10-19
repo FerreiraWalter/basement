@@ -42,7 +42,8 @@ public class CassandraConnector {
         String query = "CREATE TABLE IF NOT EXISTS my_keyspace." + tableName +"(" +
                 "    post_id UUID PRIMARY KEY," +
                 "    title TEXT," +
-                "    summary TEXT" +
+                "    summary TEXT," +
+                "    body TEXT" +
                 ");";
         session.execute(query);
     }
