@@ -29,7 +29,7 @@ public class App {
         server.createContext("/healthz", new HealthCheckHandler());
         server.setExecutor(null);
         server.start();
-        System.out.println("Server started on port: " + 8080);
+        System.out.println("Server started on port: " + apiPort);
 
         CqlSession session = client.getSession();
         System.out.println("session " + session);
